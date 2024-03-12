@@ -6,4 +6,4 @@ coverage
 gh-pages
 *.tgz
 packages/docs/src/.vuepress/dist
-/packages/*/dist/
+/packages/components/dist/
