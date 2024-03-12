@@ -466,7 +466,8 @@ export function setValidations ({
         const s = unwrap(state)
         const external = unwrap(externalResults)
         if (external) {
-          external[key] = cachedExternalResults[key]
+          // https://github.com/vuelidate/vuelidate/issues/1232
+          external[key] = undefined
         }
         if (isRef(s[key])) {
           s[key].value = val
