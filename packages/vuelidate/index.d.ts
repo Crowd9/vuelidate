@@ -104,6 +104,7 @@ export type BaseValidation <
   readonly $error: boolean
   readonly $errors: ErrorObject[]
   readonly $silentErrors: ErrorObject[]
+  readonly $silentInvalids: ErrorObject[]
   readonly $externalResults: ({ $validator: '$externalResults', $response: null, $pending: false, $params: {} } & ErrorObject)[]
   readonly $invalid: boolean
   readonly $anyDirty: boolean
@@ -177,6 +178,7 @@ export interface GlobalConfig {
   $lazy?: boolean,
   $externalResults?: ServerErrors | Ref<ServerErrors> | UnwrapRef<ServerErrors>,
   $rewardEarly?: boolean,
+  $useSilentInvalids?: boolean,
   currentVueInstance?: ComponentInternalInstance | null
 }
 
