@@ -52,6 +52,11 @@
             $rewardEarly
           </router-link>
         </li>
+        <li>
+          <router-link to="/silent-invalids">
+            $silentInvalids
+          </router-link>
+        </li>
       </ul>
     </div>
     <router-view />
