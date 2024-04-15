@@ -1,3 +1,12 @@
+# Scoped features
+These features are not present at `vuelidate` and would probably never be as they
+fall into a project-specific category.
+
+1. `v$.$silentInvalids`. Enabled via `$useSilentInvalids: true` config flag,
+  exposes all invalid fields, **upfront**, into an array and recomputes on form
+  `state` changes. Useful to create counters like "how many required fields are
+  yet to be filled", which is the original case for the feature.
+
 # vuelidate
 
 > Simple, lightweight model-based validation for Vue.js 2.x & 3.0

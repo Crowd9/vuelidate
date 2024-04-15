@@ -59,7 +59,23 @@ const rules = computed(() => ({
   }, {})
 }))
 
-const v$ = useVuelidate(rules, state, { $rewardEarly: true })
+const v$ = useVuelidate(rules, state, { $rewardEarly: true, $useSilentInvalids: true })
+
+const requiredFields = computed(() => {
+  return v$.value.$silentInvalids
+    .filter((error) => error.$validator.includes('required'))
+    .map((error) => error.$propertyPath)
+})
+
+const invalidFields = computed(() => {
+  return v$.value.$errors
+    .map((error) => error.$propertyPath)
+    .filter((value, index, array) => array.indexOf(value) === index)
+})
+
+const test = computed(() => {
+  return [...requiredFields.value, ...invalidFields.value]
+})
 </script>
 
 <template>
@@ -139,6 +155,13 @@ const v$ = useVuelidate(rules, state, { $rewardEarly: true })
       Add contact
     </button>
 
-    <pre><code>{{ { vue: version } }}</code></pre>
+    <pre class="logger"><code>{{ { vue: version, "required fields left": requiredFields.length, "required fields paths": requiredFields, test: test.length } }}</code></pre>
   </div>
 </template>
+
+<style>
+.logger {
+  background: black;
+  color: lime;
+}
+</style>

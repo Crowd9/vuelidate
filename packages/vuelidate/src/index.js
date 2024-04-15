@@ -14,6 +14,7 @@ import { ComputedProxyFactory } from './utils/ComputedProxyFactory'
  * @property {Boolean} [$autoDirty] - Should the form watch for state changed, and automatically set `$dirty` to true.
  * @property {Boolean} [$lazy] - Should the validations be lazy, and run only after they are dirty
  * @property {Boolean} [$rewardEarly] - Once valid, re-runs property validators only on manual calls of $commit
+ * @property {Boolean} [$useSilentInvalids] - expose an $silentInvalids array with all invalid fields upfront and on model change
  */
 
 /**

@@ -8,6 +8,7 @@ import ExternalValidationsForm from './components/ExternalValidationsForm.vue'
 import AsyncValidators from './components/AsyncValidators.vue'
 import NestedValidationsWithScopes from './components/NestedValidationsWithScopes/ParentValidator.vue'
 import RewardEarly from './components/RewardEarly.vue'
+import SilentInvalids from './components/SilentInvalids.vue'
 
 export const routes = [
   {
@@ -49,5 +50,9 @@ export const routes = [
   {
     path: '/reward-early',
     component: RewardEarly
+  },
+  {
+    path: '/silent-invalids',
+    component: SilentInvalids
   }
 ]

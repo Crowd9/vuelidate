@@ -206,6 +206,23 @@ function createValidationResults (rules, model, key, resultsCache, path, config,
     : []
   )
 
+  result.$silentInvalids = computed(() => ruleKeys
+    .filter(ruleKey => unwrap(result[ruleKey].$silentInvalid))
+    .map(ruleKey => {
+      const res = result[ruleKey]
+      return reactive({
+        $propertyPath: path,
+        $property: key,
+        $validator: ruleKey,
+        $uid: `${path}-${ruleKey}`,
+        $message: res.$message,
+        $params: res.$params,
+        $response: res.$response,
+        $pending: res.$pending
+      })
+    })
+  )
+
   result.$unwatch = () => ruleKeys.forEach(ruleKey => {
     result[ruleKey].$unwatch()
   })
@@ -294,6 +311,21 @@ function createMetaFields (results, nestedResults, childResults) {
     return modelErrors.concat(nestedErrors)
   })
 
+  const $silentInvalids = computed(() => {
+    // current state level errors, fallback to empty array if root
+    const modelErrors = unwrap(results.$silentInvalids) || []
+
+    // collect all nested and child $silentInvalids
+    const nestedErrors = allResults.value
+      .filter(result => (unwrap(result).$silentInvalids || []).length)
+      .reduce((errors, result) => {
+        return errors.concat(...result.$silentInvalids)
+      }, [])
+
+    // merge the $silentErrors
+    return modelErrors.concat(nestedErrors)
+  })
+
   const $errors = computed(() => {
     // current state level errors, fallback to empty array if root
     const modelErrors = unwrap(results.$errors) || []
@@ -375,6 +407,7 @@ function createMetaFields (results, nestedResults, childResults) {
     $touch,
     $reset,
     $silentErrors,
+    $silentInvalids,
     $commit
   }
 }
@@ -482,6 +515,7 @@ export function setValidations ({
     $touch,
     $reset,
     $silentErrors,
+    $silentInvalids,
     $commit
   } = createMetaFields(results, nestedResults, childResults)
 
@@ -583,6 +617,7 @@ export function setValidations ({
     $reset,
     $path: path || ROOT_PATH,
     $silentErrors,
+    $silentInvalids,
     $validate,
     $commit,
     // if there are no child results, we are inside a nested property

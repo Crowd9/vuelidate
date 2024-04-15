@@ -129,13 +129,30 @@ function createSyncResult (
   rule,
   model,
   $dirty,
-  { $lazy, $rewardEarly },
+  { $lazy, $rewardEarly, $useSilentInvalids },
   $response,
   instance,
   siblingState,
   $lastInvalidState
 ) {
+  function getValidatorResponse () {
+    let normalizedResponse = true
+    let response
+
+    try {
+      response = callRule(rule, model, siblingState, instance)
+      normalizedResponse = normalizeValidatorResponse(response)
+    } catch (err) {
+      response = err
+    }
+
+    return { normalizedResponse, response }
+  }
+
   const $unwatch = () => ({})
+  const result = computed(() => $useSilentInvalids ? getValidatorResponse() : null)
+  const $silentInvalid = computed(() => result.value?.normalizedResponse ?? false)
+
   const $invalid = computed(() => {
     if (
       // return early if $lazy mode and not touched
@@ -145,17 +162,12 @@ function createSyncResult (
       ($rewardEarly && !$lastInvalidState.value)) {
       return false
     }
-    let returnValue = true
-    try {
-      const result = callRule(rule, model, siblingState, instance)
-      $response.value = result
-      returnValue = normalizeValidatorResponse(result)
-    } catch (err) {
-      $response.value = err
-    }
+
+    const { normalizedResponse: returnValue, response } = result.value ?? getValidatorResponse()
+    $response.value = response
     return returnValue
   })
-  return { $unwatch, $invalid }
+  return { $unwatch, $invalid, $silentInvalid }
 }
 
 /**
@@ -192,6 +204,7 @@ export function createValidatorResult (
   const $response = ref(null)
   let $invalid
   let $unwatch
+  let $silentInvalid
 
   if (rule.$async) {
     ({ $invalid, $unwatch } = createAsyncResult(
@@ -208,7 +221,7 @@ export function createValidatorResult (
       $lastCommittedOn
     ))
   } else {
-    ({ $invalid, $unwatch } = createSyncResult(
+    ({ $invalid, $unwatch, $silentInvalid } = createSyncResult(
       rule.$validator,
       model,
       $dirty,
@@ -243,6 +256,7 @@ export function createValidatorResult (
     $pending,
     $invalid,
     $response,
-    $unwatch
+    $unwatch,
+    $silentInvalid
   }
 }
