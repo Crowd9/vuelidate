@@ -74,7 +74,7 @@
     "use-vue:2": "node scripts/swap-vue.js 2 && vue-demi-switch 2",
     "use-vue:2.7": "node scripts/swap-vue.js 2.7 && vue-demi-switch 2.7",
     "use-vue:3": "node scripts/swap-vue.js 3 && vue-demi-switch 3",
-    "prepare": "rm -rf packages/vuelidate/dist && npm run lerna:build"
+    "prepare": "rm -rf packages/vuelidate/dist packages/validators/dist && npm run lerna:build"
   },
   "config": {
     "commitizen": {
