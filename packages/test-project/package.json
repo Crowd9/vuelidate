@@ -14,7 +14,7 @@
     "@vitejs/plugin-vue": "^1.6.2",
     "@vue/compiler-sfc": "^3.2.2",
     "sass": "^1.37.5",
-    "vite": "^2.5.5"
+    "vite": "^6.2.5"
   },
   "browserslist": [
     "> 1%",
