@@ -35,7 +35,6 @@ function generateConfigFactory({
    */
   const config = {
     input,
-    external: ['vue-demi'],
     plugins: [resolve(), commonjs(), babel({ babelHelpers: 'bundled' })],
     output: []
   }
@@ -50,8 +49,7 @@ function generateConfigFactory({
     const opts = { ...options }
     opts.exports = 'named'
     opts.globals = {
-      ...opts.globals,
-      'vue-demi': 'VueDemi'
+      ...opts.globals
     }
 
     const isGlobalBuild = name === 'global'

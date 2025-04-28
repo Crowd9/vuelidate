@@ -1,6 +1,6 @@
 'use strict';
 
-var vueDemi = require('vue-demi');
+var { unref } = require('vue');
 
 function ownKeys(object, enumerableOnly) {
   var keys = Object.keys(object);
@@ -74,7 +74,7 @@ function withParams($params, $validator) {
 }
 
 function withMessage($message, $validator) {
-  if (!isFunction($message) && typeof vueDemi.unref($message) !== 'string') throw new Error(`[@vuelidate/validators]: First parameter to "withMessage" should be string or a function returning a string, provided ${typeof $message}`);
+  if (!isFunction($message) && typeof unref($message) !== 'string') throw new Error(`[@vuelidate/validators]: First parameter to "withMessage" should be string or a function returning a string, provided ${typeof $message}`);
   if (!isObject($validator) && !isFunction($validator)) throw new Error(`[@vuelidate/validators]: Validator must be a function or object with $validator parameter`);
   const validatorObj = normalizeValidatorObject($validator);
   validatorObj.$message = $message;
@@ -97,7 +97,7 @@ function forEach(validators) {
         others[_key - 1] = arguments[_key];
       }
 
-      return vueDemi.unref(collection).reduce((previous, collectionItem, index) => {
+      return unref(collection).reduce((previous, collectionItem, index) => {
         const collectionEntryResult = Object.entries(collectionItem).reduce((all, _ref) => {
           let [property, $model] = _ref;
           const innerValidators = validators[property] || {};
@@ -181,7 +181,7 @@ function forEach(validators) {
 }
 
 const req = value => {
-  value = vueDemi.unref(value);
+  value = unref(value);
   if (Array.isArray(value)) return !!value.length;
 
   if (value === undefined || value === null) {
@@ -205,7 +205,7 @@ const req = value => {
   return !!String(value).length;
 };
 const len = value => {
-  value = vueDemi.unref(value);
+  value = unref(value);
   if (Array.isArray(value)) return value.length;
 
   if (typeof value === 'object') {
@@ -220,7 +220,7 @@ function regex() {
   }
 
   return value => {
-    value = vueDemi.unref(value);
+    value = unref(value);
     return !req(value) || expr.every(reg => {
       reg.lastIndex = 0;
       return reg.test(value);
@@ -235,7 +235,7 @@ var common = /*#__PURE__*/Object.freeze({
   normalizeValidatorObject: normalizeValidatorObject,
   regex: regex,
   req: req,
-  unwrap: vueDemi.unref,
+  unwrap: unref,
   unwrapNormalizedValidator: unwrapNormalizedValidator,
   unwrapValidatorResponse: unwrapValidatorResponse,
   withAsync: withAsync,
@@ -250,7 +250,7 @@ var alphaNum = regex(/^[a-zA-Z0-9]*$/);
 var numeric = regex(/^\d*(\.\d+)?$/);
 
 function between (min, max) {
-  return value => !req(value) || (!/\s/.test(value) || value instanceof Date) && +vueDemi.unref(min) <= +value && +vueDemi.unref(max) >= +value;
+  return value => !req(value) || (!/\s/.test(value) || value instanceof Date) && +unref(min) <= +value && +unref(max) >= +value;
 }
 
 const emailRegex = /^(?:[A-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[A-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9]{2,}(?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])$/i;
@@ -289,7 +289,7 @@ const nibbleValid = nibble => {
 function macAddress () {
   let separator = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : ':';
   return value => {
-    separator = vueDemi.unref(separator);
+    separator = unref(separator);
 
     if (!req(value)) {
       return true;
@@ -307,11 +307,11 @@ function macAddress () {
 const hexValid = hex => hex.toLowerCase().match(/^[0-9a-f]{2}$/);
 
 function maxLength (length) {
-  return value => !req(value) || len(value) <= vueDemi.unref(length);
+  return value => !req(value) || len(value) <= unref(length);
 }
 
 function minLength (length) {
-  return value => !req(value) || len(value) >= vueDemi.unref(length);
+  return value => !req(value) || len(value) >= unref(length);
 }
 
 function required (value) {
@@ -327,7 +327,7 @@ const validate$1 = (prop, val) => prop ? req(typeof val === 'string' ? val.trim(
 function requiredIf(propOrFunction) {
   return function (value, parentVM) {
     if (typeof propOrFunction !== 'function') {
-      return validate$1(vueDemi.unref(propOrFunction), value);
+      return validate$1(unref(propOrFunction), value);
     }
 
     const result = propOrFunction.call(this, value, parentVM);
@@ -340,7 +340,7 @@ const validate = (prop, val) => !prop ? req(typeof val === 'string' ? val.trim()
 function requiredUnless(propOrFunction) {
   return function (value, parentVM) {
     if (typeof propOrFunction !== 'function') {
-      return validate(vueDemi.unref(propOrFunction), value);
+      return validate(unref(propOrFunction), value);
     }
 
     const result = propOrFunction.call(this, value, parentVM);
@@ -349,7 +349,7 @@ function requiredUnless(propOrFunction) {
 }
 
 function sameAs (equalTo) {
-  return value => vueDemi.unref(value) === vueDemi.unref(equalTo);
+  return value => unref(value) === unref(equalTo);
 }
 
 const urlRegex = /^(?:(?:(?:https?|ftp):)?\/\/)(?:\S+(?::\S*)?@)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z0-9\u00a1-\uffff][a-z0-9\u00a1-\uffff_-]{0,62})?[a-z0-9\u00a1-\uffff]\.)+(?:[a-z\u00a1-\uffff]{2,}\.?))(?::\d{2,5})?(?:[/?#]\S*)?$/i;
@@ -461,11 +461,11 @@ function not (validator) {
 }
 
 function minValue (min) {
-  return value => !req(value) || (!/\s/.test(value) || value instanceof Date) && +value >= +vueDemi.unref(min);
+  return value => !req(value) || (!/\s/.test(value) || value instanceof Date) && +value >= +unref(min);
 }
 
 function maxValue (max) {
-  return value => !req(value) || (!/\s/.test(value) || value instanceof Date) && +value <= +vueDemi.unref(max);
+  return value => !req(value) || (!/\s/.test(value) || value instanceof Date) && +value <= +unref(max);
 }
 
 var integer = regex(/(^[0-9]*$)|(^-[0-9]+$)/);

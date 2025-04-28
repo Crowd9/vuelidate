@@ -1,6 +1,6 @@
 'use strict';
 
-var vueDemi = require('vue-demi');
+var { unref } = require('vue');
 
 function ownKeys(object, enumerableOnly) {
   var keys = Object.keys(object);
@@ -74,7 +74,7 @@ function withParams($params, $validator) {
 }
 
 function withMessage($message, $validator) {
-  if (!isFunction($message) && typeof vueDemi.unref($message) !== 'string') throw new Error(`[@vuelidate/validators]: First parameter to "withMessage" should be string or a function returning a string, provided ${typeof $message}`);
+  if (!isFunction($message) && typeof unref($message) !== 'string') throw new Error(`[@vuelidate/validators]: First parameter to "withMessage" should be string or a function returning a string, provided ${typeof $message}`);
   if (!isObject($validator) && !isFunction($validator)) throw new Error(`[@vuelidate/validators]: Validator must be a function or object with $validator parameter`);
   const validatorObj = normalizeValidatorObject($validator);
   validatorObj.$message = $message;
@@ -97,7 +97,7 @@ function forEach(validators) {
         others[_key - 1] = arguments[_key];
       }
 
-      return vueDemi.unref(collection).reduce((previous, collectionItem, index) => {
+      return unref(collection).reduce((previous, collectionItem, index) => {
         const collectionEntryResult = Object.entries(collectionItem).reduce((all, _ref) => {
           let [property, $model] = _ref;
           const innerValidators = validators[property] || {};
@@ -181,7 +181,7 @@ function forEach(validators) {
 }
 
 const req = value => {
-  value = vueDemi.unref(value);
+  value = unref(value);
   if (Array.isArray(value)) return !!value.length;
 
   if (value === undefined || value === null) {
@@ -205,7 +205,7 @@ const req = value => {
   return !!String(value).length;
 };
 const len = value => {
-  value = vueDemi.unref(value);
+  value = unref(value);
   if (Array.isArray(value)) return value.length;
 
   if (typeof value === 'object') {
@@ -220,7 +220,7 @@ function regex() {
   }
 
   return value => {
-    value = vueDemi.unref(value);
+    value = unref(value);
     return !req(value) || expr.every(reg => {
       reg.lastIndex = 0;
       return reg.test(value);
@@ -235,7 +235,7 @@ var common = /*#__PURE__*/Object.freeze({
   normalizeValidatorObject: normalizeValidatorObject,
   regex: regex,
   req: req,
-  unwrap: vueDemi.unref,
+  unwrap: unref,
   unwrapNormalizedValidator: unwrapNormalizedValidator,
   unwrapValidatorResponse: unwrapValidatorResponse,
   withAsync: withAsync,
@@ -274,7 +274,7 @@ var numeric = {
 };
 
 function between$1 (min, max) {
-  return value => !req(value) || (!/\s/.test(value) || value instanceof Date) && +vueDemi.unref(min) <= +value && +vueDemi.unref(max) >= +value;
+  return value => !req(value) || (!/\s/.test(value) || value instanceof Date) && +unref(min) <= +value && +unref(max) >= +value;
 }
 
 function between (min, max) {
@@ -346,7 +346,7 @@ var ipAddress = {
 function macAddress$1 () {
   let separator = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : ':';
   return value => {
-    separator = vueDemi.unref(separator);
+    separator = unref(separator);
 
     if (!req(value)) {
       return true;
@@ -374,7 +374,7 @@ function macAddress (separator) {
 }
 
 function maxLength$1 (length) {
-  return value => !req(value) || len(value) <= vueDemi.unref(length);
+  return value => !req(value) || len(value) <= unref(length);
 }
 
 function maxLength (max) {
@@ -394,7 +394,7 @@ function maxLength (max) {
 }
 
 function minLength$1 (length) {
-  return value => !req(value) || len(value) >= vueDemi.unref(length);
+  return value => !req(value) || len(value) >= unref(length);
 }
 
 function minLength (min) {
@@ -434,7 +434,7 @@ const validate$1 = (prop, val) => prop ? req(typeof val === 'string' ? val.trim(
 function requiredIf$1(propOrFunction) {
   return function (value, parentVM) {
     if (typeof propOrFunction !== 'function') {
-      return validate$1(vueDemi.unref(propOrFunction), value);
+      return validate$1(unref(propOrFunction), value);
     }
 
     const result = propOrFunction.call(this, value, parentVM);
@@ -458,7 +458,7 @@ const validate = (prop, val) => !prop ? req(typeof val === 'string' ? val.trim()
 function requiredUnless$1(propOrFunction) {
   return function (value, parentVM) {
     if (typeof propOrFunction !== 'function') {
-      return validate(vueDemi.unref(propOrFunction), value);
+      return validate(unref(propOrFunction), value);
     }
 
     const result = propOrFunction.call(this, value, parentVM);
@@ -478,7 +478,7 @@ function requiredUnless (prop) {
 }
 
 function sameAs$1 (equalTo) {
-  return value => vueDemi.unref(value) === vueDemi.unref(equalTo);
+  return value => unref(value) === unref(equalTo);
 }
 
 function sameAs (equalTo) {
@@ -635,7 +635,7 @@ function not (validator) {
 }
 
 function minValue$1 (min) {
-  return value => !req(value) || (!/\s/.test(value) || value instanceof Date) && +value >= +vueDemi.unref(min);
+  return value => !req(value) || (!/\s/.test(value) || value instanceof Date) && +value >= +unref(min);
 }
 
 function minValue (min) {
@@ -655,7 +655,7 @@ function minValue (min) {
 }
 
 function maxValue$1 (max) {
-  return value => !req(value) || (!/\s/.test(value) || value instanceof Date) && +value <= +vueDemi.unref(max);
+  return value => !req(value) || (!/\s/.test(value) || value instanceof Date) && +value <= +unref(max);
 }
 
 var maxValue = (max => ({

@@ -9,7 +9,7 @@ const config = generateConfigFactory({
     }
   })
 })
-config.external = [/packages\/(vuelidate|validators)/, 'vue-demi']
+config.external = [/packages\/(vuelidate|validators)/]
 
 export default config
 
