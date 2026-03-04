@@ -1,4 +1,4 @@
-import { computed, ref, watch } from 'vue'
+import { computed, ref, watch, isRef } from 'vue'
 import { isFunction, unwrap, unwrapObj } from '../utils'
 
 /**
@@ -171,6 +171,25 @@ function createSyncResult (
 }
 
 /**
+ * @note [A]
+ *   Forward forward of the $active property from validator rule itself into the
+ *   validation result, to be consumed/check via the validationState.
+ *   It is a way to solve two related issues with the current implementation of
+ *   $active as a side effect of running the validator for conditional rules:
+ *   1. Infinite loop when adding reactive properties to $params
+ *      https://linear.app/gleamio/issue/GLM-9612
+ *   2. Workaround of adding "unstable" unique `id` landed in `$params` messing up
+ *      the validation results for createAsyncResult
+ *      https://linear.app/gleamio/issue/GLM-14225
+ *
+ * @todo [A]
+ *   Implement a pure active conditional like Regle's — or just migrate to Regle
+ *   anyways as vuelidate is dead software, and Regle's api is just better while
+ *   similar to vuelidate.
+ *   https://reglejs.dev/core-concepts/rules/reusable-rules#active-property
+ *   https://reglejs.dev/core-concepts/rules/rules-operators#applyif
+ *
+ *
  * Returns the validation result.
  * Detects async and sync validators.
  * @param {NormalizedValidator} rule
@@ -202,6 +221,11 @@ export function createValidatorResult (
   const $pending = ref(false)
   const $params = rule.$params || {}
   const $response = ref(null)
+  // @note [A]
+  const $active = rule.$active !== undefined
+    ? (isRef(rule.$active) ? rule.$active : ref(!!rule.$active))
+    : ref(true)
+
   let $invalid
   let $unwatch
   let $silentInvalid
@@ -257,6 +281,7 @@ export function createValidatorResult (
     $invalid,
     $response,
     $unwatch,
-    $silentInvalid
+    $silentInvalid,
+    $active // @note [A]
   }
 }

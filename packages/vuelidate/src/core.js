@@ -18,6 +18,7 @@ const ROOT_PATH = '__root'
  * @property {String | Ref<String> | function(*): string} [$message]
  * @property {Object | Ref<Object>} [$params]
  * @property {Object | Ref<Object>} [$async]
+ * @property {Ref<boolean|null>|undefined} [$active]
  * @property {Ref<*>[]} [$watchTargets]
  */
 
