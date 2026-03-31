@@ -13,24 +13,27 @@
     "url": "https://github.com/vuelidate/vuelidate.git"
   },
   "devDependencies": {
-    "@babel/core": "^7.27.1",
-    "@babel/preset-env": "^7.27.1",
-    "@rollup/plugin-commonjs": "^28.0.3",
-    "@rollup/plugin-node-resolve": "^16.0.1",
-    "@vue/compiler-sfc": "^3.5.13",
+    "@babel/core": "^7.29.0",
+    "@babel/preset-env": "^7.29.2",
+    "@rollup/plugin-commonjs": "^29.0.2",
+    "@rollup/plugin-node-resolve": "^16.0.3",
+    "@vue/compiler-sfc": "^3.5.31",
     "@vue/test-utils": "2.4.6",
-    "babel-jest": "^29.7.0",
-    "core-js": "^3.42.0",
+    "babel-jest": "^30.3.0",
+    "core-js": "^3.49.0",
     "flush-promises": "^1.0.2",
     "jest": "^27.0.6",
     "jest-serializer-vue": "^3.1.0",
-    "rollup": "^4.59.0",
+    "rollup": "^4.60.1",
     "rollup-plugin-copy": "^3.5.0",
-    "vue": "^3.5.13"
+    "vue": "^3.5.31"
   },
   "scripts": {
     "build": "npm -w @vuelidate/core run build && npm -w @vuelidate/validators run build && npm -w @vuelidate/components run build",
     "test": "jest",
     "prepare": "rm -rf packages/vuelidate/dist packages/validators/dist && npm run build"
+  },
+  "overrides": {
+    "picomatch": "^4.0.4"
   }
 }
