@@ -32,5 +32,8 @@
     "build": "npm -w @vuelidate/core run build && npm -w @vuelidate/validators run build && npm -w @vuelidate/components run build",
     "test": "jest",
     "prepare": "rm -rf packages/vuelidate/dist packages/validators/dist && npm run build"
+  },
+  "overrides": {
+    "picomatch": "^4.0.4"
   }
 }
