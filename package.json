@@ -35,6 +35,7 @@
   },
   "overrides": {
     "picomatch": "^4.0.4",
-    "js-cookie": "^3.0.7"
+    "js-cookie": "^3.0.7",
+    "@tootallnate/once": "^2.0.1"
   }
 }
