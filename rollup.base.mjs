@@ -33,6 +33,28 @@ function generateConfigFactory({
     output: []
   }
 
+  if (copyTypes) {
+    // buildEnd runs once per config; a per-output writeBundle copy races
+    // against itself when rollup writes the mjs/cjs outputs in parallel
+    config.plugins.push(
+      copy({
+        flatten: true,
+        targets: [
+          {
+            src: 'index.d.ts',
+            dest: 'dist',
+            rename: 'index.d.cts'
+          },
+          {
+            src: 'index.d.ts',
+            dest: 'dist',
+            rename: 'index.d.mts'
+          }
+        ]
+      })
+    )
+  }
+
   /**
    * Create config output
    * @param {string} name
@@ -48,26 +70,6 @@ function generateConfigFactory({
     if (isGlobalBuild) opts.name = libraryName
     opts.plugins = []
 
-    if (copyTypes) {
-      opts.plugins.push(
-        copy({
-          hook: 'writeBundle',
-          flatten: true,
-          targets: [
-            {
-              src: 'index.d.ts',
-              dest: 'dist',
-              rename: 'index.d.cts'
-            },
-            {
-              src: 'index.d.ts',
-              dest: 'dist',
-              rename: 'index.d.mts'
-            }
-          ]
-        })
-      )
-    }
     return opts
   }
 
