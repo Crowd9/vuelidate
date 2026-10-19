@@ -9,15 +9,15 @@ describe('withMessage', () => {
   })
 
   it('should throw if message is array', () => {
-    expect(() => withMessage([], fn)).toThrowError()
+    expect(() => withMessage([], fn)).toThrow()
   })
 
   it('should throw if message is object', () => {
-    expect(() => withMessage({}, fn)).toThrowError()
+    expect(() => withMessage({}, fn)).toThrow()
   })
 
   it('should throw if provided string as validator', () => {
-    expect(() => withMessage('msg', 'fn')).toThrowError()
+    expect(() => withMessage('msg', 'fn')).toThrow()
   })
 
   it('should allow message as function', () => {
