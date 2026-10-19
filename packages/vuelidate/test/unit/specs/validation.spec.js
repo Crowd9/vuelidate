@@ -1104,6 +1104,9 @@ describe('useVuelidate', () => {
       const { vm } = await createSimpleWrapper({ number: { asyncValidator: withAsync(validator) } }, { number })
       // make sure the validator is armed
       expect(validator).toHaveBeenCalledTimes(1)
+      // keep the dirty state invocation pending, until we resolve it manually
+      let resolveDirtyInvocation
+      validator.mockImplementationOnce(() => new Promise(resolve => { resolveDirtyInvocation = resolve }))
       vm.v.$touch()
       await nextTick()
       // assert its called once, for the dirty state change
@@ -1115,6 +1118,8 @@ describe('useVuelidate', () => {
       expect(vm.v.number.$pending).toBe(true)
       // invalid is false, as we are not sure about the validator result
       expect(vm.v.number.$invalid).toBe(false)
+      resolveDirtyInvocation(true)
+      await flushPromises()
 
       // change it a few times
       number.value = 1

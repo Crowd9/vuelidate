@@ -4,23 +4,23 @@ describe('withParams validator modifier', () => {
   const func = (x) => true
 
   it('should throw on invalid params', () => {
-    expect(() => withParams([], func)).toThrowError()
+    expect(() => withParams([], func)).toThrow()
   })
 
   it('should throw on string params in closure', () => {
-    expect(() => withParams('notObject', func)).toThrowError()
+    expect(() => withParams('notObject', func)).toThrow()
   })
 
   it('should throw on array params in closure', () => {
-    expect(() => withParams(['asdf'], func)).toThrowError('First parameter to "withParams" should be an object')
+    expect(() => withParams(['asdf'], func)).toThrow('First parameter to "withParams" should be an object')
   })
 
   it('should throw on string input', () => {
-    expect(() => withParams({}, 'string')).toThrowError('Validator must be a function or object with $validator parameter')
+    expect(() => withParams({}, 'string')).toThrow('Validator must be a function or object with $validator parameter')
   })
 
   it('should throw on array input', () => {
-    expect(() => withParams({}, [])).toThrowError('Validator must be a function or object with $validator parameter')
+    expect(() => withParams({}, [])).toThrow('Validator must be a function or object with $validator parameter')
   })
 
   it('should return an object, attaching provided params', () => {

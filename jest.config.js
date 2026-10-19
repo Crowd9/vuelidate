@@ -4,5 +4,5 @@ module.exports = {
   ...base,
   rootDir: './',
   projects: ['<rootDir>/packages/vuelidate', '<rootDir>/packages/validators', '<rootDir>/packages/components'],
-  testURL: 'http://localhost/'
+  testEnvironmentOptions: { url: 'http://localhost/' }
 }
